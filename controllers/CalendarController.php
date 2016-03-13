@@ -48,10 +48,32 @@ class CalendarController extends Controller
     {
         $searchModel = new CalendarSearch();
         $dataProvider = $searchModel->search([
-            'CalendarSearch'=> array_merge(
-                ['creator' => Yii::$app->user->id],
-                Yii::$app->request->queryParams
-            )
+            'CalendarSearch'=> [
+                'creator' => Yii::$app->user->id
+            ]
+        ]);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists friend Calendar models.
+     * @param int $id
+     * @return mixed
+     */
+    public function actionFriendcalendars($id)
+    {
+        $searchModel = new CalendarSearch();
+        $dataProvider = $searchModel->search([
+            'CalendarSearch' => [
+                'creator' => $id,
+                'access' => [
+                    'user_guest' => Yii::$app->user->id
+                ]
+            ]
         ]);
 
         return $this->render('index', [
