@@ -8,14 +8,14 @@ use Yii;
  * This is the model class for table "tbl_access".
  *
  * @property integer $id
- * @property integer $note_id
+ * @property integer $calendar_id
  * @property integer $user_owner
  * @property integer $user_guest
  * @property string $date
  *
- * @property TblUser $userOwner
- * @property TblUser $userGuest
- * @property TblCalendar $note
+ * @property User $userOwner
+ * @property User $userGuest
+ * @property Calendar $note
  */
 class Access extends \yii\db\ActiveRecord
 {
@@ -36,8 +36,8 @@ class Access extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['note_id', 'user_owner', 'user_guest', 'date'], 'required'],
-            [['note_id', 'user_owner', 'user_guest'], 'integer'],
+            [['calendar_id', 'user_owner', 'user_guest', 'date'], 'required'],
+            [['calendar_id', 'user_owner', 'user_guest'], 'integer'],
             [['date'], 'safe']
         ];
     }
@@ -82,7 +82,7 @@ class Access extends \yii\db\ActiveRecord
      */
     public function getUserOwner()
     {
-        return $this->hasOne(TblUser::className(), ['id' => 'user_owner']);
+        return $this->hasMany(User::className(), ['user_owner' => 'id']);
     }
 
     /**
@@ -90,15 +90,15 @@ class Access extends \yii\db\ActiveRecord
      */
     public function getUserGuest()
     {
-        return $this->hasOne(TblUser::className(), ['id' => 'user_guest']);
+        return $this->hasMany(User::className(), ['user_guest' => 'id']);
     }
 
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getNote()
+    public function getCalendar()
     {
-        return $this->hasOne(TblCalendar::className(), ['id' => 'note_id']);
+        return $this->hasMany(Calendar::className(), ['calendar_id' => 'id']);
     }
 
     /**

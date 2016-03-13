@@ -25,16 +25,16 @@ class AccessQuery extends \yii\db\ActiveQuery
     }
 
     /**
-     * Condition with user_id
-     * @param $user_id
+     * Condition with user_guest
+     * @param $user_guest
      * @return $this
      */
-    public function withUser($user_id)
+    public function withUser($user_guest)
     {
         return $this->andWhere(
-            'user_id = :user_id',
+            'user_guest = :user_guest',
             [
-                ":user_id" => $user_id
+                ":user_guest" => $user_guest
             ]
         );
     }
