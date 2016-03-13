@@ -19,6 +19,9 @@ use Yii;
  */
 class Access extends \yii\db\ActiveRecord
 {
+    const ACCESS_CREATOR = 1;
+    const ACCESS_GUEST = 2;
+
     /**
      * @inheritdoc
      */
@@ -51,6 +54,27 @@ class Access extends \yii\db\ActiveRecord
             'user_guest' => Yii::t('app', 'User Guest'),
             'date' => Yii::t('app', 'Date'),
         ];
+    }
+
+    /**
+     * Check access current user by calendar
+     * @param Calendar $model
+     * @return bool|int
+     */
+    public static function checkAccess($model)
+    {
+        if($model->creator == Yii::$app->user->id)
+        {
+            return self::ACCESS_CREATOR;
+        }
+        $accessCalendar = self::find()
+            ->withCalendar($model->id)
+            ->withUser(Yii::$app->user->id)
+            ->exists();
+        if($accessCalendar)
+            return self::ACCESS_GUEST;
+
+        return false;
     }
 
     /**

@@ -3,10 +3,13 @@
 namespace app\controllers;
 
 use Yii;
+use app\models\Access;
 use app\models\Calendar;
 use app\models\search\CalendarSearch;
 use yii\web\Controller;
+use yii\web\ForbiddenHttpException;
 use yii\web\NotFoundHttpException;
+use yii\filters\AccessControl;
 use yii\filters\VerbFilter;
 
 /**
@@ -17,6 +20,17 @@ class CalendarController extends Controller
     public function behaviors()
     {
         return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'only' => ['mycalendars', 'create', 'update', 'delete'],
+                'rules' => [
+                    [
+                        'actions' => ['mycalendars', 'create', 'update', 'delete'],
+                        'allow' => true,
+                        'roles' => ['@'],
+                    ],
+                ],
+            ],
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
@@ -27,13 +41,18 @@ class CalendarController extends Controller
     }
 
     /**
-     * Lists all Calendar models.
+     * Lists my Calendar models.
      * @return mixed
      */
-    public function actionIndex()
+    public function actionMycalendars()
     {
         $searchModel = new CalendarSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search([
+            'CalendarSearch'=> array_merge(
+                ['creator' => Yii::$app->user->id],
+                Yii::$app->request->queryParams
+            )
+        ]);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -43,14 +62,33 @@ class CalendarController extends Controller
 
     /**
      * Displays a single Calendar model.
-     * @param integer $id
-     * @return mixed
+     * @param $id
+     * @return string
+     * @throws ForbiddenHttpException
+     * @throws NotFoundHttpException
      */
     public function actionView($id)
     {
-        return $this->render('view', [
-            'model' => $this->findModel($id),
-        ]);
+        $model = $this->findModel($id);
+
+        $result = Access::checkAccess($model);
+
+        if($result)
+        {
+            switch($result) {
+                case Access::ACCESS_CREATOR:
+                    return $this->render('viewCreator', [
+                        'model' => $model,
+                    ]);
+                break;
+                case Access::ACCESS_GUEST:
+                    return $this->render('viewGuest', [
+                        'model' => $model,
+                    ]);
+                break;
+            }
+        }
+        throw new ForbiddenHttpException("Not allowed! ");
     }
 
     /**

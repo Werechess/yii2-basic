@@ -68,7 +68,7 @@ class Calendar extends \yii\db\ActiveRecord
     }
 
     /**
-     * Before save event handler
+     * Before save new calendar creator is current user
      * @param bool $insert
      * @return bool
      */
