@@ -4,6 +4,8 @@ namespace app\controllers;
 
 use Yii;
 use app\models\Access;
+use app\models\Calendar;
+use app\models\User;
 use app\models\search\AccessSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
@@ -34,6 +36,24 @@ class AccessController extends Controller
     {
         $searchModel = new AccessSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'user_owner' => Yii::$app->user->id,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * Lists
+     * @return mixed
+     */
+    public function actionFriendslist()
+    {
+        $searchModel = new AccessSearch();
+        $dataProvider = $searchModel->search(
+            Yii::$app->request->queryParams
+        );
 
         return $this->render('index', [
             'searchModel' => $searchModel,

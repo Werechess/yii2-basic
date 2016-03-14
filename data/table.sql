@@ -65,14 +65,12 @@ DROP TABLE IF EXISTS `mydb`.`tbl_access` ;
 
 CREATE TABLE IF NOT EXISTS `mydb`.`tbl_access` (
   `id` INT NOT NULL AUTO_INCREMENT COMMENT '',
-  `calendar_id` INT NOT NULL COMMENT '',
   `user_owner` INT NOT NULL COMMENT '',
   `user_guest` INT NOT NULL COMMENT '',
   `date` DATE NOT NULL COMMENT '',
   PRIMARY KEY (`id`)  COMMENT '',
   INDEX `fk_tbl_access_1_idx` (`user_owner` ASC)  COMMENT '',
   INDEX `fk_tbl_access_2_idx` (`user_guest` ASC)  COMMENT '',
-  INDEX `fk_tbl_access_3_idx` (`calendar_id` ASC)  COMMENT '',
   CONSTRAINT `fk_tbl_access_1`
     FOREIGN KEY (`user_owner`)
     REFERENCES `mydb`.`tbl_user` (`id`)
@@ -81,11 +79,6 @@ CREATE TABLE IF NOT EXISTS `mydb`.`tbl_access` (
   CONSTRAINT `fk_tbl_access_2`
   FOREIGN KEY (`user_guest`)
   REFERENCES `mydb`.`tbl_user` (`id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `fk_tbl_access_3`
-  FOREIGN KEY (`calendar_id`)
-  REFERENCES `mydb`.`tbl_calendar` (`id`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

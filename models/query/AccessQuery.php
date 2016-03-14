@@ -10,16 +10,16 @@ namespace app\models\query;
 class AccessQuery extends \yii\db\ActiveQuery
 {
     /**
-     * Condition with calendar_id
-     * @param $calendar_id
+     * Condition with date
+     * @param $date
      * @return $this
      */
-    public function withCalendar($calendar_id)
+    public function withDate($date)
     {
         return $this->andWhere(
-            'calendar_id = :calendar_id',
+            'date = :date',
             [
-                ":calendar_id" => $calendar_id
+                ':date' => $date
             ]
         );
     }
@@ -29,12 +29,12 @@ class AccessQuery extends \yii\db\ActiveQuery
      * @param $user_guest
      * @return $this
      */
-    public function withUser($user_guest)
+    public function withGuest($user_guest)
     {
         return $this->andWhere(
             'user_guest = :user_guest',
             [
-                ":user_guest" => $user_guest
+                ':user_guest' => $user_guest
             ]
         );
     }

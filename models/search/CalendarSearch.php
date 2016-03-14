@@ -5,7 +5,6 @@ namespace app\models\search;
 use Yii;
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use app\models\Access;
 use app\models\Calendar;
 
 /**

@@ -12,8 +12,6 @@ use yii\widgets\ActiveForm;
 
     <?php $form = ActiveForm::begin(); ?>
 
-    <?= $form->field($model, 'calendar_id')->textInput() ?>
-
     <?= $form->field($model, 'user_owner')->textInput() ?>
 
     <?= $form->field($model, 'user_guest')->textInput() ?>

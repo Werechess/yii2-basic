@@ -15,6 +15,16 @@ class CalendarQuery extends \yii\db\ActiveQuery
         return $this;
     }*/
 
+    public function withCreator($creator_id)
+    {
+        return $this->andWhere(
+            'creator = :creator_id',
+            [
+                ':creator_id' => $creator_id
+            ]
+        );
+    }
+
     /**
      * @inheritdoc
      * @return \app\models\Calendar[]|array

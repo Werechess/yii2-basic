@@ -15,11 +15,6 @@ class m160311_180939_create_calendar extends Migration
               `date_event` DATETIME DEFAULT CURRENT_TIMESTAMP COMMENT '',
               PRIMARY KEY (`id`)  COMMENT '',
               INDEX `fk_tbl_calendar_1_idx` (`creator` ASC)  COMMENT '',
-              CONSTRAINT `fk_tbl_calendar_1`
-                FOREIGN KEY (`creator`)
-                REFERENCES `tbl_user` (`id`)
-                ON DELETE NO ACTION
-                ON UPDATE NO ACTION)
             ENGINE = InnoDB CHARACTER SET UTF8
         ");
     }

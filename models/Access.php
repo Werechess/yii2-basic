@@ -8,14 +8,10 @@ use Yii;
  * This is the model class for table "tbl_access".
  *
  * @property integer $id
- * @property integer $calendar_id
  * @property integer $user_owner
  * @property integer $user_guest
  * @property string $date
  *
- * @property User $userOwner
- * @property User $userGuest
- * @property Calendar $note
  */
 class Access extends \yii\db\ActiveRecord
 {
@@ -36,8 +32,8 @@ class Access extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['calendar_id', 'user_owner', 'user_guest', 'date'], 'required'],
-            [['calendar_id', 'user_owner', 'user_guest'], 'integer'],
+            [['user_owner', 'user_guest'], 'required'],
+            [['user_owner', 'user_guest'], 'integer'],
             [['date'], 'safe']
         ];
     }
@@ -49,11 +45,27 @@ class Access extends \yii\db\ActiveRecord
     {
         return [
             'id' => Yii::t('app', 'ID'),
-            'note_id' => Yii::t('app', 'Note ID'),
             'user_owner' => Yii::t('app', 'User Owner'),
             'user_guest' => Yii::t('app', 'User Guest'),
+//            'calendarsCount' => Yii::t('app', 'Calendars Count'),
             'date' => Yii::t('app', 'Date'),
         ];
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserOwner()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_owner']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getUserGuest()
+    {
+        return $this->hasOne(User::className(), ['id' => 'user_guest']);
     }
 
     /**
@@ -68,11 +80,12 @@ class Access extends \yii\db\ActiveRecord
             return self::ACCESS_CREATOR;
         }
         $accessCalendar = self::find()
-            ->withCalendar($model->id)
-            ->withUser(Yii::$app->user->id)
+            ->withDate($model->date_event)
+            ->withGuest(Yii::$app->user->id)
             ->exists();
-        if($accessCalendar)
+        if($accessCalendar) {
             return self::ACCESS_GUEST;
+        }
 
         return false;
     }
@@ -80,25 +93,17 @@ class Access extends \yii\db\ActiveRecord
     /**
      * @return \yii\db\ActiveQuery
      */
-    public function getUserOwner()
-    {
-        return $this->hasMany(User::className(), ['user_owner' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
-    public function getUserGuest()
-    {
-        return $this->hasMany(User::className(), ['user_guest' => 'id']);
-    }
-
-    /**
-     * @return \yii\db\ActiveQuery
-     */
     public function getCalendar()
     {
-        return $this->hasMany(Calendar::className(), ['calendar_id' => 'id']);
+        return $this->hasMany(Calendar::className(), ['date_event' => 'date']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getGuest()
+    {
+        return $this->hasMany(User::className(), ['id' => 'user_guest']);
     }
 
     /**

@@ -41,6 +41,24 @@ class CalendarController extends Controller
     }
 
     /**
+     * Lists all Calendar models.
+     * @return mixed
+     */
+    public function actionIndex()
+    {
+        $searchModel = new CalendarSearch();
+        $dataProvider = $searchModel->search([
+            'CalendarSearch'=>['creator' => Yii::$app->user->id]
+        ]);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'creator' => Yii::$app->user->id,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
      * Lists my Calendar models.
      * @return mixed
      */
@@ -108,9 +126,9 @@ class CalendarController extends Controller
                         'model' => $model,
                     ]);
                 break;
-            }
+                }
         }
-        throw new ForbiddenHttpException("Not allowed! ");
+        throw new ForbiddenHttpException("Not Allowed!");
     }
 
     /**
